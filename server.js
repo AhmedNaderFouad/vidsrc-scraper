@@ -30,21 +30,9 @@ const PROVIDERS = [
     getMovieUrl: (id) => `https://vidsrc.pm/embed/movie/${id}`,
     getTvUrl: (id, s, e) => `https://vidsrc.pm/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
   },
-  {
-    name: "vidsrc.net",
-    getMovieUrl: (id) => `https://vidsrc.net/embed/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://vidsrc.net/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
-  },
-  {
-    name: "vidsrc.vip",
-    getMovieUrl: (id) => `https://vidsrc.vip/embed/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://vidsrc.vip/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
-  },
-  {
-    name: "vidsrc.io",
-    getMovieUrl: (id) => `https://vidsrc.io/embed/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://vidsrc.io/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
-  },
+
+
+
 
   // --- شبكة VidLink والسيرفرات السريعة ---
   {
@@ -52,11 +40,7 @@ const PROVIDERS = [
     getMovieUrl: (id) => `https://vidlink.pro/movie/${id}`,
     getTvUrl: (id, s, e) => `https://vidlink.pro/tv/${id}/${s}/${e}`,
   },
-  {
-    name: "vidsrc.me",
-    getMovieUrl: (id) => `https://vidsrc.me/embed/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}`,
-  },
+
 ];
 
 export const LANGUAGE_NAMES = {
@@ -162,7 +146,7 @@ async function scrapeProvider(domain, url) {
     // 3. التفاعل مع المشغلات و الأطر داخل الصفحة
     for (const frame of page.frames()) {
       try {
-        await frame.hover("body").catch(() => {});
+        await frame.hover("body").catch(() => { });
 
         const playSelectors = [
           "#player",
@@ -176,7 +160,7 @@ async function scrapeProvider(domain, url) {
         for (const selector of playSelectors) {
           const el = await frame.$(selector);
           if (el) {
-            await el.click({ force: true, timeout: 1500 }).catch(() => {});
+            await el.click({ force: true, timeout: 1500 }).catch(() => { });
             break;
           }
         }
@@ -192,15 +176,15 @@ async function scrapeProvider(domain, url) {
       retries++;
     }
 
-    await page.close().catch(() => {});
-    await context.close().catch(() => {});
+    await page.close().catch(() => { });
+    await context.close().catch(() => { });
 
     if (!mediaUrl) throw new Error("Media Stream URL not found");
 
     return { hls_url: mediaUrl, subtitles, error: null };
   } catch (error) {
-    await page.close().catch(() => {});
-    await context.close().catch(() => {});
+    await page.close().catch(() => { });
+    await context.close().catch(() => { });
     console.error(`[${domain}] Error: ${error.message}`);
     return { hls_url: null, subtitles: [], error: error.message };
   }
